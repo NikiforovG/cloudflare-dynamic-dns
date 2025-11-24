@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "cloudflare-dynamic-dns"
+version = "0.1.0"
+description = ""
+authors = ["Gleb Nikiforov <lomdjaria11@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.18.2"
+mypy-extensions = "^1.1.0"
+ruff = "^0.14.6"
+pre-commit = "^4.5.0"
+fawltydeps = "^0.20.0"
+bumpversion = "^0.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+indent-width = 4
+src = ['app']
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D10",  # no need for docstrings
+    "PGH003",  # # type: ignore is widely used when mypy is wrong
+    "TD002",  # we do not use TODO authors
+    "TD003",  # we do not use issue links for TODOs
+    "FIX002",  # TODOs are allowed
+]
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.fawltydeps]
+code = ["app"]
+deps = ["pyproject.toml"]
+ignore_unused = [
+    "fawltydeps",
+    "mypy",
+    "mypy-extensions",
+    "pre-commit",
+    "ruff",
+    "bumpversion",
+]
