@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import structlog
 from cloudflare import Cloudflare
@@ -7,9 +7,12 @@ from cloudflare.types.dns import RecordResponse, record_list_params
 if TYPE_CHECKING:
     from cloudflare.pagination import SyncV4PagePaginationArray
 
-from app.src.models import DNSRecord, RecordType
+from app.src.models import DNSRecord
 
 logger = structlog.get_logger()
+
+
+_RECORD_TYPE: Literal["A"] = "A"
 
 
 class CloudflareClient:
@@ -17,13 +20,13 @@ class CloudflareClient:
         self._client = Cloudflare(api_token=api_token)
         self._zone_id = zone_id
 
-    async def get_dns_record(self, record_name: str, record_type: RecordType = "A") -> DNSRecord | None:
-        await logger.adebug("Fetching DNS record", record_name=record_name, record_type=record_type)
+    async def get_dns_record(self, record_name: str) -> DNSRecord | None:
+        await logger.adebug("Fetching DNS record", record_name=record_name, record_type=_RECORD_TYPE)
         name_filter: record_list_params.Name = {"exact": record_name}
         records: SyncV4PagePaginationArray[RecordResponse] = self._client.dns.records.list(
             zone_id=self._zone_id,
             name=name_filter,
-            type=record_type,
+            type=_RECORD_TYPE,
         )
 
         if not records.result:
@@ -34,7 +37,6 @@ class CloudflareClient:
     async def create_dns_record(
         self,
         record_name: str,
-        record_type: RecordType,
         content: str,
         *,
         ttl: int = 300,
@@ -43,13 +45,13 @@ class CloudflareClient:
         await logger.adebug(
             "Creating DNS record",
             record_name=record_name,
-            record_type=record_type,
+            record_type=_RECORD_TYPE,
             content=content,
         )
         raw_record = self._client.dns.records.create(
             zone_id=self._zone_id,
             name=record_name,
-            type=record_type,  # type: ignore[arg-type]
+            type=_RECORD_TYPE,
             content=content,
             ttl=ttl,
             proxied=proxied,
@@ -57,11 +59,10 @@ class CloudflareClient:
 
         return self._to_dns_record(self._ensure_record_response(raw_record, "created", record_name))
 
-    async def update_dns_record(  # noqa: PLR0913
+    async def update_dns_record(
         self,
         record_id: str,
         record_name: str,
-        record_type: RecordType,
         content: str,
         *,
         ttl: int = 300,
@@ -77,7 +78,7 @@ class CloudflareClient:
             dns_record_id=record_id,
             zone_id=self._zone_id,
             name=record_name,
-            type=record_type,  # type: ignore[arg-type]
+            type=_RECORD_TYPE,
             content=content,
             ttl=ttl,
             proxied=proxied,
@@ -97,6 +98,5 @@ class CloudflareClient:
         return DNSRecord(
             id=raw_record.id,
             name=raw_record.name,
-            type=raw_record.type,
             content=normalized_content,
         )

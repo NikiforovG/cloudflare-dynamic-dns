@@ -2,19 +2,16 @@
   "records": [
     {
       "name": "example.com",
-      "type": "A",
       "proxied": true,
       "ttl": 1
     },
     {
       "name": "www.example.com",
-      "type": "A",
       "proxied": true,
       "ttl": 1
     },
     {
       "name": "direct.example.com",
-      "type": "A",
       "proxied": false,
       "ttl": 300
     }

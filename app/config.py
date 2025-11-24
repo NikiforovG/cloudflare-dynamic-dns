@@ -5,14 +5,11 @@ import structlog
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
-from app.src.models import RecordType
-
 logger = structlog.get_logger()
 
 
 class DNSRecordConfig(BaseModel):
     name: str = Field(..., description="DNS record name")
-    type: RecordType = Field(default="A", description="DNS record type")
     proxied: bool = Field(default=False, description="Whether to proxy through Cloudflare")
     ttl: int = Field(default=300, description="DNS record TTL in seconds")
 

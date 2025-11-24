@@ -30,17 +30,13 @@ class _FakeCloudflareClient:
         self.raise_on_create = False
         self.raise_on_update = False
 
-    async def get_dns_record(self, name: str, record_type: str) -> DNSRecord | None:
-        record = self.records.get(name)
-        if record and record.type == record_type:
-            return record
-        return None
+    async def get_dns_record(self, name: str) -> DNSRecord | None:
+        return self.records.get(name)
 
     async def create_dns_record(
         self,
         *,
         record_name: str,
-        record_type: str,
         content: str,
         ttl: int,
         proxied: bool,
@@ -50,13 +46,12 @@ class _FakeCloudflareClient:
             raise RuntimeError(msg)
         payload = {
             "name": record_name,
-            "type": record_type,
             "content": content,
             "ttl": str(ttl),
             "proxied": str(proxied),
         }
         self.created_calls.append(payload)
-        record = DNSRecord(id=f"{record_name}-id", name=record_name, type=record_type, content=content)
+        record = DNSRecord(id=f"{record_name}-id", name=record_name, content=content)
         self.records[record_name] = record
         return record
 
@@ -65,7 +60,6 @@ class _FakeCloudflareClient:
         *,
         record_id: str,
         record_name: str,
-        record_type: str,
         content: str,
         ttl: int,
         proxied: bool,
@@ -76,13 +70,12 @@ class _FakeCloudflareClient:
         payload = {
             "id": record_id,
             "name": record_name,
-            "type": record_type,
             "content": content,
             "ttl": str(ttl),
             "proxied": str(proxied),
         }
         self.updated_calls.append(payload)
-        record = DNSRecord(id=record_id, name=record_name, type=record_type, content=content)
+        record = DNSRecord(id=record_id, name=record_name, content=content)
         self.records[record_name] = record
         return record
 

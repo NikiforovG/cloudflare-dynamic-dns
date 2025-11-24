@@ -47,10 +47,7 @@ class DNSUpdater:
         return updated
 
     async def _update_record(self, current_ip: str, record_config: DNSRecordConfig) -> bool:
-        existing_record = await self._cloudflare_client.get_dns_record(
-            record_config.name,
-            record_config.type,
-        )
+        existing_record = await self._cloudflare_client.get_dns_record(record_config.name)
 
         if existing_record:
             if existing_record.content == current_ip:
@@ -60,7 +57,6 @@ class DNSUpdater:
             await self._cloudflare_client.update_dns_record(
                 record_id=existing_record.id,
                 record_name=record_config.name,
-                record_type=record_config.type,
                 content=current_ip,
                 ttl=record_config.ttl,
                 proxied=record_config.proxied,
@@ -74,7 +70,6 @@ class DNSUpdater:
         else:
             await self._cloudflare_client.create_dns_record(
                 record_name=record_config.name,
-                record_type=record_config.type,
                 content=current_ip,
                 ttl=record_config.ttl,
                 proxied=record_config.proxied,

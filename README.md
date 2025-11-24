@@ -8,6 +8,8 @@ Docker image: [`nikiforovgv/cloudflare-ddns`](https://hub.docker.com/r/nikiforov
 
 Keeps one or more Cloudflare DNS records synced with your current public IP. The daemon periodically checks your IP, compares it with the records you configured, and creates or updates Cloudflare entries when needed.
 
+Only IPv4 `A` records are supported; all entries will receive the detected public IPv4 address.
+
 ### Configuration
 - `CLOUDFLARE_API_TOKEN` – API token with DNS edit permissions for the zone.
 - `CLOUDFLARE_ZONE_ID` – Cloudflare zone identifier.
@@ -18,8 +20,8 @@ The records file is JSON shaped like:
 ```json
 {
   "records": [
-    {"name": "home.example.com", "type": "A", "ttl": 300, "proxied": false},
-    {"name": "vpn.example.com", "type": "AAAA", "ttl": 120, "proxied": true}
+    {"name": "home.example.com", "ttl": 300, "proxied": false},
+    {"name": "vpn.example.com", "ttl": 120, "proxied": true}
   ]
 }
 ```

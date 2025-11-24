@@ -10,7 +10,7 @@ async def test_update_creates_record_when_missing(
     cloudflare_client_factory,
     updater_factory,
 ) -> None:
-    record_config = DNSRecordConfig(name="home.example.com", type="A", ttl=300, proxied=False)
+    record_config = DNSRecordConfig(name="home.example.com", ttl=300, proxied=False)
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory()
     updater = updater_factory(ip_detector, cf_client, [record_config])
@@ -28,8 +28,8 @@ async def test_update_skips_when_record_is_up_to_date(
     cloudflare_client_factory,
     updater_factory,
 ) -> None:
-    existing = DNSRecord(id="rec-1", name="home.example.com", type="A", content="1.2.3.4")
-    record_config = DNSRecordConfig(name="home.example.com", type="A", ttl=120, proxied=False)
+    existing = DNSRecord(id="rec-1", name="home.example.com", content="1.2.3.4")
+    record_config = DNSRecordConfig(name="home.example.com", ttl=120, proxied=False)
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory(records={"home.example.com": existing})
     updater = updater_factory(ip_detector, cf_client, [record_config])
@@ -47,8 +47,8 @@ async def test_update_changes_record_when_ip_differs(
     cloudflare_client_factory,
     updater_factory,
 ) -> None:
-    existing = DNSRecord(id="rec-2", name="home.example.com", type="A", content="5.6.7.8")
-    record_config = DNSRecordConfig(name="home.example.com", type="A", ttl=60, proxied=True)
+    existing = DNSRecord(id="rec-2", name="home.example.com", content="5.6.7.8")
+    record_config = DNSRecordConfig(name="home.example.com", ttl=60, proxied=True)
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory(records={"home.example.com": existing})
     updater = updater_factory(ip_detector, cf_client, [record_config])
@@ -65,7 +65,7 @@ async def test_update_skips_when_ip_has_not_changed_since_last_run(
     cloudflare_client_factory,
     updater_factory,
 ) -> None:
-    record_config = DNSRecordConfig(name="home.example.com", type="A", ttl=300, proxied=False)
+    record_config = DNSRecordConfig(name="home.example.com", ttl=300, proxied=False)
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory()
     updater = updater_factory(ip_detector, cf_client, [record_config])
@@ -85,10 +85,10 @@ async def test_update_handles_multiple_records(
     cloudflare_client_factory,
     updater_factory,
 ) -> None:
-    existing = DNSRecord(id="rec-10", name="home.example.com", type="A", content="9.9.9.9")
+    existing = DNSRecord(id="rec-10", name="home.example.com", content="9.9.9.9")
     configs = [
-        DNSRecordConfig(name="home.example.com", type="A", ttl=300, proxied=False),
-        DNSRecordConfig(name="vpn.example.com", type="A", ttl=120, proxied=True),
+        DNSRecordConfig(name="home.example.com", ttl=300, proxied=False),
+        DNSRecordConfig(name="vpn.example.com", ttl=120, proxied=True),
     ]
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory(records={"home.example.com": existing})
@@ -110,8 +110,8 @@ async def test_update_continues_when_cloudflare_raises(
     updater_factory,
 ) -> None:
     configs = [
-        DNSRecordConfig(name="home.example.com", type="A", ttl=300, proxied=False),
-        DNSRecordConfig(name="vpn.example.com", type="A", ttl=300, proxied=False),
+        DNSRecordConfig(name="home.example.com", ttl=300, proxied=False),
+        DNSRecordConfig(name="vpn.example.com", ttl=300, proxied=False),
     ]
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory()
@@ -130,7 +130,7 @@ async def test_update_retries_after_failure(
     cloudflare_client_factory,
     updater_factory,
 ) -> None:
-    record_config = DNSRecordConfig(name="home.example.com", type="A", ttl=300, proxied=False)
+    record_config = DNSRecordConfig(name="home.example.com", ttl=300, proxied=False)
     ip_detector = ip_detector_factory("1.2.3.4")
     cf_client = cloudflare_client_factory()
     cf_client.raise_on_create = True

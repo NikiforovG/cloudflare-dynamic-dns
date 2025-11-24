@@ -10,8 +10,8 @@ def make_config(tmp_path: Path, *, records: dict | None = None) -> Config:
     config_path = tmp_path / "records.json"
     data = records or {
         "records": [
-            {"name": "home.example.com", "type": "A", "ttl": 300, "proxied": False},
-            {"name": "vpn.example.com", "type": "AAAA", "ttl": 60, "proxied": True},
+            {"name": "home.example.com", "ttl": 300, "proxied": False},
+            {"name": "vpn.example.com", "ttl": 60, "proxied": True},
         ]
     }
     config_path.write_text(json.dumps(data))
@@ -30,7 +30,7 @@ def test_load_dns_records_success(tmp_path: Path) -> None:
 
     assert len(records) == 2
     assert records[0].name == "home.example.com"
-    assert records[1].type == "AAAA"
+    assert records[1].name == "vpn.example.com"
 
 
 def test_load_dns_records_raises_for_missing_file(tmp_path: Path) -> None:
