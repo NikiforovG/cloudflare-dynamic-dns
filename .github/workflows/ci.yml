@@ -28,6 +28,35 @@ jobs:
 
       - name: Run tests
         run: make test
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
+
+build-and-push-rc:
+    runs-on: ubuntu-latest
+    needs: check
+    if: github.event_name == 'workflow_dispatch'  # only for manual runs
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push RC Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/cloudflare-ddns:${{ env.APP_VERSION }}-rc
+            ${{ secrets.DOCKERHUB_USERNAME }}/cloudflare-ddns:${{ github.sha }}
 
   build-and-push:
     runs-on: ubuntu-latest
