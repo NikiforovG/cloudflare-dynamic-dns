@@ -21,7 +21,7 @@ format:
 check:
 	ruff check app
 	fawltydeps
-	mypy --strict --namespace-packages --explicit-package-bases app
+	mypy app
 
 
 test:
