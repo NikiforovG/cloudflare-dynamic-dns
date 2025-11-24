@@ -1,5 +1,9 @@
 ## Cloudflare Dynamic DNS
 
+![CI](https://github.com/nikiforovg/cloudflare-dynamic-dns/actions/workflows/ci.yml/badge.svg?branch=main)
+[![Coverage](https://codecov.io/gh/nikiforovg/cloudflare-dynamic-dns/branch/main/graph/badge.svg)](https://codecov.io/gh/nikiforovg/cloudflare-dynamic-dns)
+![Version](https://img.shields.io/github/v/tag/nikiforovg/cloudflare-dynamic-dns?label=version)
+
 Docker image: [`nikiforovgv/cloudflare-ddns`](https://hub.docker.com/r/nikiforovgv/cloudflare-ddns)
 
 Keeps one or more Cloudflare DNS records synced with your current public IP. The daemon periodically checks your IP, compares it with the records you configured, and creates or updates Cloudflare entries when needed.

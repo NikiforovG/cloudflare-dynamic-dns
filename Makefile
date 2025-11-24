@@ -25,5 +25,5 @@ check:
 
 
 test:
-	pytest --cov=app --cov-report=xml --cov-report=term-missing --junitxml=tests/report.xml
+	pytest --cov=app --cov-branch --cov-report=xml
 
