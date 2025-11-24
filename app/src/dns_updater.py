@@ -31,6 +31,7 @@ class DNSUpdater:
             return False
 
         updated = False
+        had_errors = False
 
         for record_config in self._dns_records:
             try:
@@ -40,8 +41,9 @@ class DNSUpdater:
                     "Failed to update record",
                     record_name=record_config.name,
                 )
+                had_errors = True
 
-        self._last_ip = current_ip
+        self._last_ip = None if had_errors else current_ip
         return updated
 
     async def _update_record(self, current_ip: str, record_config: DNSRecordConfig) -> bool:

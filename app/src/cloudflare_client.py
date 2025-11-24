@@ -2,11 +2,10 @@ from typing import TYPE_CHECKING
 
 import structlog
 from cloudflare import Cloudflare
-from cloudflare.types.dns import RecordResponse
+from cloudflare.types.dns import RecordResponse, record_list_params
 
 if TYPE_CHECKING:
     from cloudflare.pagination import SyncV4PagePaginationArray
-    from cloudflare.types.dns import record_list_params
 
 from app.src.models import DNSRecord, RecordType
 

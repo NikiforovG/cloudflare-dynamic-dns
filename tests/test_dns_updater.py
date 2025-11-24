@@ -123,3 +123,23 @@ async def test_update_continues_when_cloudflare_raises(
     assert changed is False
     assert not cf_client.updated_calls
 
+
+@pytest.mark.asyncio
+async def test_update_retries_after_failure(
+    ip_detector_factory,
+    cloudflare_client_factory,
+    updater_factory,
+) -> None:
+    record_config = DNSRecordConfig(name="home.example.com", type="A", ttl=300, proxied=False)
+    ip_detector = ip_detector_factory("1.2.3.4")
+    cf_client = cloudflare_client_factory()
+    cf_client.raise_on_create = True
+    updater = updater_factory(ip_detector, cf_client, [record_config])
+
+    await updater.update()
+    cf_client.raise_on_create = False
+
+    changed = await updater.update()
+
+    assert changed is True
+    assert cf_client.created_calls[-1]["content"] == "1.2.3.4"
