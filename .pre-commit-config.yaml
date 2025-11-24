@@ -6,3 +6,9 @@ repos:
       entry: make check
       language: system
       pass_filenames: false
+
+    - id: test
+      name: test
+      entry: make test
+      language: system
+      pass_filenames: false
