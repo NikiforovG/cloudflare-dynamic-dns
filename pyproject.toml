@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Dynamic DNS updater for Cloudflare"
 authors = ["Gleb Nikiforov <lomdjaria11@gmail.com>"]
 readme = "README.md"
-package-mode = false
+packages = [{ include = "app" }]
 
 [tool.poetry.scripts]
 cloudflare-ddns = "app.main:main"
