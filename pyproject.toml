@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cloudflare-dynamic-dns"
-version = "0.1.0"
+version = "0.1.1"
 description = "Dynamic DNS updater for Cloudflare"
 authors = ["Gleb Nikiforov <lomdjaria11@gmail.com>"]
 readme = "README.md"
