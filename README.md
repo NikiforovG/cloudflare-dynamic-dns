@@ -66,20 +66,23 @@ poetry run make check
 poetry run make test
 ```
 
-After review, use bumpversion's built-in commit and tag support:
+After review, bump the version and push the release in one command:
 
 ```sh
-poetry run bumpversion patch
+poetry run make release
 ```
 
-Use `minor` or `major` instead of `patch` for a larger increment. This updates
-`.bumpversion.cfg`, `pyproject.toml`, and `app/__init__.py` together, commits the
-changes, and creates the matching annotated tag (for example, `v0.1.2`).
+The default is a patch release. Use `poetry run make release PART=minor` or
+`PART=major` for a larger increment. The target requires `main`, runs formatting,
+and uses bumpversion to update `.bumpversion.cfg`, `pyproject.toml`, and
+`app/__init__.py` together, commit the changes, and create the matching annotated
+tag (for example, `v0.1.2`). It then pushes `main` and that tag atomically.
+
 To prepare changes for staged review before committing, use
 `poetry run bumpversion --no-commit --no-tag patch` instead; after the reviewed
 commit, create its tag with `git tag -a "v$(poetry version --short)" -m "Release $(poetry version --short)"`.
 
-Publish the commit and its version tag together, without typing the version:
+For the staged-review flow, or to retry a failed push without bumping again:
 
 ```sh
 git push --atomic origin main "refs/tags/v$(poetry version --short)"
