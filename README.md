@@ -92,3 +92,7 @@ CI validates the tag against the package and application versions, then runs
 linting and tests before publishing `nikiforovgv/cloudflare-ddns:0.1.2`, `:latest`,
 and the commit-SHA tag.
 `latest` follows the last published release. Prerelease tags are not supported.
+
+After Docker publishing succeeds, CI creates a GitHub Release for the existing
+tag, with automatically generated release notes and the versioned Docker image
+reference. Rerunning the workflow leaves an existing GitHub Release unchanged.
