@@ -52,3 +52,40 @@ Create `config/records.json` alongside `docker-compose.yml`, then run:
 ```sh
 docker compose up -d --build
 ```
+
+### Releases
+
+Releases use annotated Git tags such as `v0.1.2`. Only stable `vX.Y.Z` tags
+publish Docker images; branch pushes and pull requests run checks only.
+
+Start from a clean, up-to-date `main`. Run the checks before preparing a release:
+
+```sh
+poetry run make format
+poetry run make check
+poetry run make test
+```
+
+After review, use bumpversion's built-in commit and tag support:
+
+```sh
+poetry run bumpversion patch
+```
+
+Use `minor` or `major` instead of `patch` for a larger increment. This updates
+`.bumpversion.cfg`, `pyproject.toml`, and `app/__init__.py` together, commits the
+changes, and creates the matching annotated tag (for example, `v0.1.2`).
+To prepare changes for staged review before committing, use
+`poetry run bumpversion --no-commit --no-tag patch` instead; after the reviewed
+commit, create its tag with `git tag -a "v$(poetry version --short)" -m "Release $(poetry version --short)"`.
+
+Publish the commit and its version tag together, without typing the version:
+
+```sh
+git push --atomic origin main "refs/tags/v$(poetry version --short)"
+```
+
+CI validates the tag against the package and application versions, then runs
+linting and tests before publishing `nikiforovgv/cloudflare-ddns:0.1.2`, `:latest`,
+and the commit-SHA tag.
+`latest` follows the last published release. Prerelease tags are not supported.
